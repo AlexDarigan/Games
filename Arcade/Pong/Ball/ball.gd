@@ -1,6 +1,5 @@
 extends KinematicBody2D
 
-signal goal_scored(goal)
 export var direction: Vector2 = Vector2.LEFT
 export var speed: float = 300
 export var default_boost: float = 1.1
@@ -33,7 +32,6 @@ func _physics_process(delta: float) -> void:
 	bounce.play()
 
 func _on_VisibilityNotifier2D_screen_exited() -> void:
-	emit_signal("goal_scored", Vector2.RIGHT if direction.x == 1 else Vector2.LEFT)
 	direction.x = -direction.x
 	boost = default_boost
 	launch()

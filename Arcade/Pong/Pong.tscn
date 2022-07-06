@@ -1,17 +1,19 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Paddle/Paddle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Boundary/Boundary.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Goal.gd" type="Script" id=3]
 [ext_resource path="res://Ball/Ball.tscn" type="PackedScene" id=4]
-[ext_resource path="res://pong.gd" type="Script" id=5]
 [ext_resource path="res://goal.ogg" type="AudioStream" id=6]
 [ext_resource path="res://Score/Score.tscn" type="PackedScene" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 640, 2 )
 
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 2, 360 )
+
 [node name="Pong" type="Node"]
-script = ExtResource( 5 )
 
 [node name="Background" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -45,6 +47,7 @@ key_up = 16777232
 key_down = 16777234
 
 [node name="Ball" parent="." instance=ExtResource( 4 )]
+collision_layer = 3
 
 [node name="Ceiling" parent="." instance=ExtResource( 2 )]
 
@@ -57,5 +60,26 @@ shape = SubResource( 1 )
 
 [node name="Goal" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
+volume_db = 1.0
+script = ExtResource( 3 )
 
-[connection signal="goal_scored" from="Ball" to="." method="_on_Ball_goal_scored"]
+[node name="LeftGoal" type="Area2D" parent="."]
+position = Vector2( -2, 360 )
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftGoal"]
+shape = SubResource( 2 )
+
+[node name="RightGoal" type="Area2D" parent="."]
+position = Vector2( 1282, 360 )
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightGoal"]
+shape = SubResource( 2 )
+
+[connection signal="body_entered" from="LeftGoal" to="RightScore" method="_on_Goal_scored"]
+[connection signal="body_entered" from="LeftGoal" to="Goal" method="_on_Goal_scored"]
+[connection signal="body_entered" from="RightGoal" to="LeftScore" method="_on_Goal_scored"]
+[connection signal="body_entered" from="RightGoal" to="Goal" method="_on_Goal_scored"]

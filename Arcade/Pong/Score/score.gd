@@ -1,8 +1,9 @@
 extends Label
 class_name Score
 
-var value: int = 0 setget set_score
+var value: int = 0
 
-func set_score(new_value: int) -> void:
-	value = new_value
+
+func _on_Goal_scored(_body: Node) -> void:
+	value += 1
 	text = value as String
